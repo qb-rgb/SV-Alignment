@@ -1,5 +1,5 @@
 /**
-  * Class that represents objects which aligns two sequences
+  * Abstract class that represents objects which aligns two sequences
   *
   * @author Quentin Baert
   */
