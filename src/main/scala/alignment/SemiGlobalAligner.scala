@@ -1,3 +1,14 @@
+/** Class to represent semi global aligners.
+  *
+  * @constructor create a new aligner.
+  * @param sequence1 first sequence to align
+  * @param sequence2 second sequence to align
+  * @param matchScore score of a match
+  * @param mismatchScore score of a mismatch
+  * @param indelScore score of an insertion/deletion
+  *
+  * @author Quentin Baert
+  */
 class SemiGlobalAligner(
   override val sequence1: String,
   override val sequence2: String,
@@ -7,6 +18,7 @@ class SemiGlobalAligner(
   override val brink: Int
 ) extends Aligner(sequence1, sequence2, matchScore, mismatchScore, indelScore, brink) {
 
+  /** @see alignment.Aligner.align() */
   override def align: Array[Array[Int]] = {
     val dim1 = this.n1 + 1
     val dim2 = this.n2 + 1
