@@ -30,6 +30,7 @@ class SemiGlobalAligner(
     for (i <- 0 to this.n2)
       scores(i)(0) = -i
 
+    // Rest of the matrix
     for (i <- 1 to this.n2)
       for (j <- 1 to this.n1)
         scores(i)(j) = this.cost(scores, i, j, this.sequence1(j - 1), this.sequence2(i - 1))
