@@ -42,8 +42,7 @@ abstract class Aligner(
     * @return best score to put in the dynamique programming matrix
     */
   protected def cost(array: Array[Array[Int]], i: Int, j: Int, char1: Char, char2: Char): Int = {
-    def max3(x: Int, y: Int, z: Int): Int =
-      math.max(x, math.max(y, z))
+    def max3(x: Int, y: Int, z: Int): Int = math.max(x, math.max(y, z))
 
     val matchOrMisMatch =
       if (char1 == char2)
