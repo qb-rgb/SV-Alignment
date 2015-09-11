@@ -35,8 +35,8 @@ abstract class Aligner(
   /** Cost function of the aligner.
     *
     * @param array matrix for the dynamique programming
-    * @param i column of the matrix in the recursion
-    * @param j row of the matric in the recursion
+    * @param i row of the matrix in the recursion
+    * @param j column of the matrix in the recursion
     * @param char1 char of the first sequence actually aligned
     * @param char2 char of the second sequence actually aligned
     * @return best score to put in the dynamique programming matrix
