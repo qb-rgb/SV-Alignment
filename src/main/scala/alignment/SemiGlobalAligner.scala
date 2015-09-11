@@ -24,7 +24,7 @@ class SemiGlobalAligner(
 
     // First row
     for (j <- 0 to this.n1)
-      scores(0)(j) = j * indelScore
+      scores(0)(j) = 0
 
     // First column
     for (i <- 0 to this.n2)
