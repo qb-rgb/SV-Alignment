@@ -75,7 +75,7 @@ abstract class Aligner(
     }
 
     def putSpacesOnLine(gap: Int, line: Array[Int]): String =
-      (line map (x => putSpaces(gap, x))).mkString
+      (line map (x => f"$x%5d")).mkString
 
     (this.alignmentMatrix.transpose map (x => putSpacesOnLine(5, x))) mkString "\n"
   }
