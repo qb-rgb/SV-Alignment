@@ -24,11 +24,11 @@ class SemiGlobalAligner(
 
     // First row
     for (j <- 0 to this.n1)
-      scores(0)(j) = -j
+      scores(0)(j) = j * indelScore
 
     // First column
     for (i <- 0 to this.n2)
-      scores(i)(0) = -i
+      scores(i)(0) = i * indelScore
 
     // Rest of the matrix
     for (i <- 1 to this.n2)
