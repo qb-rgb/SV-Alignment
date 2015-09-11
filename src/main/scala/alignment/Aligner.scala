@@ -59,6 +59,6 @@ abstract class Aligner(
     *
     * @return alignment matrix for the two sequences of the aligner
     */
-  def align: Array[Array[Int]]
+  protected def align: Array[Array[Int]]
 
 }
