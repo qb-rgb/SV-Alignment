@@ -38,4 +38,89 @@ class SemiGlobalAligner(
     scores
   }
 
+  /** @see alignment.Aligner.showAlignment() */
+  def showAlignment: String = {
+    def backtrace(
+      actualI: Int,
+      actualJ: Int,
+      upI: Int,
+      upJ: Int,
+      leftI: Int,
+      leftJ: Int,
+      upLeftI: Int,
+      upLeftJ: Int,
+      alignedSequence1: String,
+      alignedSequence2: String): String = {
+
+      if (alignedSequence2.length >= this.sequence2.length &&
+          alignedSequence2(0) == this.sequence2(0))
+        alignedSequence1 + "\n" + alignedSequence2
+      else {
+        val actual = this.alignmentMatrix(actualI)(actualJ)
+        val left = this.alignmentMatrix(leftI)(leftJ)
+        val upLeft = this.alignmentMatrix(upLeftI)(upLeftJ)
+
+        val thisIsMatch =
+          (actual == upLeft + this.matchScore) &&
+          (this.sequence1(actualJ - 1) == this.sequence2(actualI - 1))
+
+        if (thisIsMatch || actual == upLeft + this.mismatchScore)
+          backtrace(
+            upLeftI,
+            upLeftJ,
+            upLeftI - 1,
+            upLeftJ,
+            upLeftI,
+            upLeftJ - 1,
+            upLeftI - 1,
+            upLeftJ - 1,
+            this.sequence1(actualJ - 1) + alignedSequence1,
+            this.sequence2(actualI - 1) + alignedSequence2
+          )
+        else if (actual == left + this.indelScore)
+          backtrace(
+            leftI,
+            leftJ,
+            upLeftI,
+            upLeftJ,
+            leftI,
+            leftJ - 1,
+            upLeftI,
+            upLeftJ - 1,
+            this.sequence1(actualJ - 1) + alignedSequence1,
+            "-" + alignedSequence2
+          )
+        else
+          backtrace(
+            upI,
+            upJ,
+            upI - 1,
+            upJ,
+            upLeftI,
+            upLeftJ,
+            upLeftI - 1,
+            upLeftJ,
+            "-" + alignedSequence1,
+            this.sequence2(actualI - 1) + alignedSequence2
+          )
+      }
+
+    }
+
+    val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
+
+    backtrace(
+      this.n2,
+      minScoreIndex,
+      this.n2 - 1,
+      minScoreIndex,
+      this.n2,
+      minScoreIndex - 1,
+      this.n2 - 1,
+      minScoreIndex - 1,
+      "",
+      ""
+    )
+  }
+
 }
