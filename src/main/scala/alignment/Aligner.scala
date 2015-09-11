@@ -63,4 +63,21 @@ abstract class Aligner(
 
   protected val alignmentMatrix: Array[Array[Int]] = this.align
 
+  /** Show the alignment matrix of the alignment.
+    *
+    * @return string which represents the alignment matrix
+    */
+  def showAlignmentMatrix: String = {
+    def putSpaces(gap: Int, x: Int): String = {
+      val xString = x.toString
+
+      xString + List.fill(gap - xString.length)(' ').mkString
+    }
+
+    def putSpacesOnLine(gap: Int, line: Array[Int]): String =
+      (line map (x => putSpaces(gap, x))).mkString
+
+    (this.alignmentMatrix.transpose map (x => putSpacesOnLine(5, x))) mkString "\n"
+  }
+
 }
