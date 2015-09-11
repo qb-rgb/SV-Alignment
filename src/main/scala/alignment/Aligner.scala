@@ -61,4 +61,6 @@ abstract class Aligner(
     */
   protected def align: Array[Array[Int]]
 
+  protected val alignmentMatrix: Array[Array[Int]] = this.align
+
 }
