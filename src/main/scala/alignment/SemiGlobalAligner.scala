@@ -30,11 +30,9 @@ class SemiGlobalAligner(
     for (j <- 0 until dim2)
       scores(0)(j) = -j
 
-    for (i <- 1 until dim1) {
-      for (j <- 1 until dim2) {
+    for (i <- 1 until dim1)
+      for (j <- 1 until dim2)
         scores(i)(j) = this.cost(scores, i, j, this.sequence1(i - 1), this.sequence2(j - 1))
-      }
-    }
 
     scores
   }
