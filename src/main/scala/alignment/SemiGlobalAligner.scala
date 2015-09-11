@@ -24,9 +24,11 @@ class SemiGlobalAligner(
     val dim2 = this.n2 + 1
     val scores = Array.ofDim[Int](dim2, dim1)
 
+    // First row
     for (j <- 0 until dim1)
       scores(0)(j) = -j
 
+    // First column
     for (i <- 0 until dim2)
       scores(i)(0) = -i
 
