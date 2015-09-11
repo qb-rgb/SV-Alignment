@@ -74,4 +74,10 @@ abstract class Aligner(
     (this.alignmentMatrix map (x => putSpacesOnLine(x))) mkString "\n"
   }
 
+  /** Show the alignment of the two sequences.
+    *
+    * @return string which represent the alignment of the two sequences
+    */
+    def showAlignment: String
+
 }
