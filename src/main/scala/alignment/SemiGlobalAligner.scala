@@ -22,17 +22,17 @@ class SemiGlobalAligner(
   override protected def align: Array[Array[Int]] = {
     val dim1 = this.n1 + 1
     val dim2 = this.n2 + 1
-    val scores = Array.ofDim[Int](dim1, dim2)
+    val scores = Array.ofDim[Int](dim2, dim1)
 
-    for (i <- 0 until dim1)
-      scores(i)(0) = -i
-
-    for (j <- 0 until dim2)
+    for (j <- 0 until dim1)
       scores(0)(j) = -j
 
-    for (i <- 1 until dim1)
-      for (j <- 1 until dim2)
-        scores(i)(j) = this.cost(scores, i, j, this.sequence1(i - 1), this.sequence2(j - 1))
+    for (i <- 0 until dim2)
+      scores(i)(0) = -i
+
+    for (i <- 1 until dim2)
+      for (j <- 1 until dim1)
+        scores(i)(j) = this.cost(scores, i, j, this.sequence1(j - 1), this.sequence2(i - 1))
 
     scores
   }
