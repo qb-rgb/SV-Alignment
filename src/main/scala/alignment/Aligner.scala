@@ -29,6 +29,9 @@ abstract class Aligner(
   // Probably useless !
   assert(n1 >= n2)
 
+  // It is useless to align a empty sequence
+  assert(n1 != 0 && n2 != 0)
+
   /** Cost function of the aligner.
     *
     * @param array matrix for the dynamique programming
