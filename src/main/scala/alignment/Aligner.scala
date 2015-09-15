@@ -25,12 +25,11 @@ abstract class Aligner(
   // Length of the second sequence.
   protected val n2: Int = sequence2.length
 
-  // It is assumed that the first sequence is longer than the second.
-  // Probably useless !
-  assert(n1 >= n2)
+  // It is assumed that the first sequence is longer than the second
+  assert(this.n1 >= this.n2)
 
   // It is useless to align a empty sequence
-  assert(n1 != 0 && n2 != 0)
+  assert(this.n1 != 0 && this.n2 != 0)
 
   /** Cost function of the aligner.
     *
