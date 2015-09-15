@@ -15,8 +15,8 @@ class SemiGlobalAligner(
   override val matchScore: Int,
   override val mismatchScore: Int,
   override val indelScore: Int,
-  override val brink: Int
-) extends Aligner(sequence1, sequence2, matchScore, mismatchScore, indelScore, brink) {
+  override val error: Int
+) extends Aligner(sequence1, sequence2, matchScore, mismatchScore, indelScore, error) {
 
   /** @see alignment.Aligner.align() */
   override protected def align: Array[Array[Int]] = {

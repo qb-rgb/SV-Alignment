@@ -16,7 +16,7 @@ abstract class Aligner(
   val matchScore: Int,
   val mismatchScore: Int,
   val indelScore: Int,
-  val brink: Int
+  val error: Int
 ) {
 
   // Length of the first sequence.
