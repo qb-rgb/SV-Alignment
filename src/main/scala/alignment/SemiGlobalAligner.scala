@@ -48,9 +48,9 @@ class SemiGlobalAligner(
 
   /** @see alignment.Aligner.showAlignment() */
   def showAlignment: String = {
-    def backtrace(i: Int, j: Int, s1: String, s2: String, s3: String): (String, String, String) = {
-      if (s2.length >= this.sequence2.length && s2(0) == this.sequence2(0))
-        (s1, s2, s3)
+    def backtrace(i: Int, j: Int, s1: String, s2: String, s3: String): (String, String, String, Int) = {
+      if (i == 0)
+        (s1, s2, s3, j)
       else {
         val (upI, upJ) = (i - 1, j)
         val (leftI, leftJ) = (i, j - 1)
@@ -84,9 +84,11 @@ class SemiGlobalAligner(
     }
 
     val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
-    val (s1, s2, middle) = backtrace(this.n2, minScoreIndex, "", "", "")
+    val (s1, s2, middle, beginIndex) = backtrace(this.n2, minScoreIndex, "", "", "")
+    val one = 1
+    val elevenSpaces = " " * 11
 
-    s1 + "\n" + middle + "\n" + s2
+    f"${beginIndex + 1}%10d " + s1 + "\n" + elevenSpaces + middle + "\n" + f"$one%10d " + s2
   }
 
 }
