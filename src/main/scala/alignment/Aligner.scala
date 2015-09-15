@@ -79,4 +79,16 @@ abstract class Aligner(
     */
     def showAlignment: String
 
+  /** Count the number of matches of the alignment produced by the aligner.
+    *
+    * @return number of matches of the alignment produced by the aligner
+    */
+  def countMatches: Int = (this.showAlignment filter (_ == '|')).length
+
+  /** Count the number of gaps of the alignment produced by the aligner.
+    *
+    * @return number of gaps of the alignment produced by the aligner
+    */
+  def countGaps: Int = (this.showAlignment filter (_ == '-')).length
+
 }
