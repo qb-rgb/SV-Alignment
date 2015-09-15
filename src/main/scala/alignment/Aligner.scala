@@ -31,9 +31,6 @@ abstract class Aligner(
   // It is useless to align a empty sequence
   assert(this.n1 != 0 && this.n2 != 0)
 
-  // Not more error than the length of the smallest sequence
-  assert(this.error < this.n2)
-
   /** Cost function of the aligner.
     *
     * @param array matrix for the dynamique programming
