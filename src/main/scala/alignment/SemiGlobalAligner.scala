@@ -40,9 +40,9 @@ class SemiGlobalAligner(
 
   /** @see alignment.Aligner.showAlignment() */
   def showAlignment: String = {
-    def backtrace(i: Int, j: Int, s1: String, s2: String): (String, String) = {
+    def backtrace(i: Int, j: Int, s1: String, s2: String, s3: String): (String, String, String) = {
       if (s2.length >= this.sequence2.length && s2(0) == this.sequence2(0))
-        (s1, s2)
+        (s1, s2, s3)
       else {
         val (upI, upJ) = (i - 1, j)
         val (leftI, leftJ) = (i, j - 1)
@@ -55,26 +55,30 @@ class SemiGlobalAligner(
           (actual == upLeft + this.matchScore) &&
           (this.sequence1(j - 1) == this.sequence2(i - 1))
 
-        if (thisIsMatch || actual == upLeft + this.mismatchScore)
+        if (thisIsMatch || actual == upLeft + this.mismatchScore) {
+          val middleChar = if (thisIsMatch) "|" else " "
+
           backtrace(upLeftI, upLeftJ,
                     this.sequence1(j - 1) + s1,
-                    this.sequence2(i - 1) + s2)
-        else if (actual == left + this.indelScore)
+                    this.sequence2(i - 1) + s2,
+                    middleChar + s3)
+        } else if (actual == left + this.indelScore)
           backtrace(leftI, leftJ,
                     this.sequence1(j - 1) + s1,
-                    "-" + s2)
+                    "-" + s2,
+                    " " + s3)
         else
           backtrace(upI, upJ,
                     "-" + s1,
-                    this.sequence2(i - 1) + s2)
+                    this.sequence2(i - 1) + s2,
+                    " " + s3)
       }
     }
 
     val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
-    val (s1, s2) = backtrace(this.n2, minScoreIndex, "", "")
-    val midleLine = (s1 zip s2) map (c => if (c._1 == c._2) '|' else ' ')
+    val (s1, s2, middle) = backtrace(this.n2, minScoreIndex, "", "", "")
 
-    s1 + "\n" + midleLine.mkString + "\n" + s2
+    s1 + "\n" + middle + "\n" + s2
   }
 
 }
