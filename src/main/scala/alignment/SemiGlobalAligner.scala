@@ -1,3 +1,5 @@
+package alignment
+
 /** Class to represent semi global aligners.
   *
   * @constructor create a new aligner.

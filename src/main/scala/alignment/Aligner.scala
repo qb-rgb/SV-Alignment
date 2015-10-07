@@ -1,3 +1,5 @@
+package alignment
+
 /** Abstract class to represent aligners.
   * An aligner aligns two sequences with match, mismatch and insertion/deletion.
   *
