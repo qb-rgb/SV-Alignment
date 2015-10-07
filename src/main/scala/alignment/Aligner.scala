@@ -82,7 +82,7 @@ abstract class Aligner(
     *
     * @return string which represent the alignment of the two sequences
     */
-    def showAlignment: String
+  def showAlignment: String
 
   /** Count the number of matches of the alignment produced by the aligner.
     *
