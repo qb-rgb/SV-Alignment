@@ -8,10 +8,32 @@ package object indexation {
     * @param genome genome from which build the suffix table
     * @return suffix table of the genome
     */
+  /*
   def buildSuffixTableFrom(genome: String): SuffixTable = {
     val n = genome.length
     (0 until genome.length).toList sortWith {
       (i, j) => genome.substring(i) < genome.substring(j)
+    }
+  }
+  */
+
+  def f(genome: String, iinit: Int, jinit: Int, i: Int, j: Int): Boolean = {
+    if (i >= genome.length || j >= genome.length)
+      iinit + i < jinit + j
+    else {
+      val gi = genome(i)
+      val gj = genome(j)
+
+      if (gi == gj)
+        f(genome, iinit, jinit, i + 1, j + 1)
+      else
+        gi < gj
+    }
+  }
+
+  def buildSuffixTableFrom(genome: String): SuffixTable = {
+    (0 until genome.length).toList sortWith {
+      (i, j) => f(genome, i, j, i, j)
     }
   }
 
