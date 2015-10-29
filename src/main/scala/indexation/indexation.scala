@@ -1,5 +1,6 @@
 package object indexation {
 
+  /** A suffix table is a list of int. */
   type SuffixTable = List[Int]
 
   // Compare two section of the genome without using the substring method
