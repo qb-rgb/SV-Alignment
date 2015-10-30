@@ -2,10 +2,10 @@ package indexation
 
 /** Create a suffix table from a given genome and handle it.
   *
-  * @constructor create a new SuffixTableHandler
+  * @constructor create a new SuffixTableIndexer
   * @param genome genome from which build the suffix table
   */
-class SuffixTableHandler(val genome: String) {
+class SuffixTableIndexer(val genome: String) extends Indexer {
 
   // Compare two section of the genome without using the substring method
   def indexCompare(s1: String, s2: String, i: Int, j: Int): Boolean = {
@@ -19,7 +19,7 @@ class SuffixTableHandler(val genome: String) {
     ): Boolean = {
       val ends1 = i >= s1.length
 
-      if (j >= s2.length || ends1)
+      if (ends1 || j >= s2.length)
         ends1
       else {
         val s1i = s1(i)
@@ -50,13 +50,8 @@ class SuffixTableHandler(val genome: String) {
       (i, j) => indexCompare(this.genome, this.genome, i, j)
     }
 
-  /** Make a binary search to get the indexes of a sequence in the suffix table.
-    *
-    * @param sequence sequence to find
-    * @return indexes showing the interval of the suffix table in which the
-    *         sequence is.
-    */
-  def getSequenceLocation(sequence: String): Option[(Int, Int)] = {
+  /** @see indexation.Indexer.getSequenceLocation() */
+  def getSequenceLocation(sequence: String): Iterator[Int] = {
     // Search read position around a value
     def getBorder(i: Int, cond: Int => Boolean, f: Int => Int, st: SuffixTable): Int =
       if (cond(i))
@@ -88,7 +83,16 @@ class SuffixTableHandler(val genome: String) {
         binarySearch(st take m, i)
     }
 
-    binarySearch(this.suffixTable, 0)
+    val optSlice = binarySearch(this.suffixTable, 0)
+
+    if (optSlice.isDefined) {
+      val (minbound, maxbound) = optSlice.get
+
+      (minbound to maxbound).toIterator map { this.suffixTable(_) }
+    }
+    else
+      Iterator()
+
   }
 
 }
