@@ -1,5 +1,10 @@
 package indexation
 
+/** Create a suffix table from a given genome and handle it.
+  *
+  * @constructor create a new SuffixTableHandler
+  * @param genome genome from which build the suffix table
+  */
 class SuffixTableHandler(val genome: String) {
 
   // Compare two section of the genome without using the substring method
