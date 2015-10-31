@@ -1,4 +1,4 @@
-package alignment
+package align
 
 /** Class to represent semi global aligners.
   *
@@ -20,7 +20,7 @@ class SemiGlobalAligner(
   override val error: Int
 ) extends Aligner(sequence1, sequence2, matchScore, mismatchScore, indelScore, error) {
 
-  /** @see alignment.Aligner.align() */
+  /** @see align.Aligner.align() */
   override protected def align: Array[Array[Int]] = {
     val scores = Array.ofDim[Int](this.n2 + 1, this.n1 + 1)
     val minusInfinity = -100000
@@ -48,7 +48,7 @@ class SemiGlobalAligner(
     scores
   }
 
-  /** @see alignment.Aligner.showAlignment() */
+  /** @see align.Aligner.showAlignment() */
   def showAlignment: String = {
     def backtrace(i: Int, j: Int, s1: String, s2: String, s3: String): (String, String, String, Int) = {
       if (i == 0)
