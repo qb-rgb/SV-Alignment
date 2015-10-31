@@ -23,7 +23,7 @@ class SemiGlobalAligner(
   /** @see alignment.Aligner.align() */
   override protected def align: Array[Array[Int]] = {
     val scores = Array.ofDim[Int](this.n2 + 1, this.n1 + 1)
-    val minusInfinity = -100
+    val minusInfinity = -100000
 
     // First row
     for (j <- 0 to this.error)
