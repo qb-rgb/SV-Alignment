@@ -73,7 +73,7 @@ abstract class Aligner(
     */
   def showAlignmentMatrix: String = {
     def putSpacesOnLine(line: Array[Int]): String =
-      (line map (x => f"$x%5d")).mkString
+      (line map (x => f"$x%6d")).mkString
 
     (this.alignmentMatrix map (x => putSpacesOnLine(x))) mkString "\n"
   }
