@@ -61,11 +61,15 @@ abstract class Aligner(
 
   /** Create the alignment matrix for the two sequences of the aligner.
     *
+    * @return alignment for the two sequences of the aligner
+    */
+  def alignment: Alignment
+
+  /** Give the alignement matrix for the two sequences of the aligner.
+    *
     * @return alignment matrix for the two sequences of the aligner
     */
-  protected def align: Array[Array[Int]]
-
-  protected val alignmentMatrix: Array[Array[Int]] = this.align
+  protected def alignmentMatrix: Array[Array[Int]]
 
   /** Show the alignment matrix of the alignment.
     *
@@ -77,23 +81,5 @@ abstract class Aligner(
 
     (this.alignmentMatrix map (x => putSpacesOnLine(x))) mkString "\n"
   }
-
-  /** Show the alignment of the two sequences.
-    *
-    * @return string which represent the alignment of the two sequences
-    */
-  def showAlignment: String
-
-  /** Count the number of matches of the alignment produced by the aligner.
-    *
-    * @return number of matches of the alignment produced by the aligner
-    */
-  def countMatches: Int = (this.showAlignment filter (_ == '|')).length
-
-  /** Count the number of gaps of the alignment produced by the aligner.
-    *
-    * @return number of gaps of the alignment produced by the aligner
-    */
-  def countGaps: Int = (this.showAlignment filter (_ == '-')).length
 
 }
