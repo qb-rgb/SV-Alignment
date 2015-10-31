@@ -6,7 +6,7 @@ import indexation.Indexer
 class ExactSeeker(val indexer: Indexer) extends Seeker {
 
   /** @see search.Seeker.seekSequence() */
-  def seekSequence(sequence: String): Iterator[Int] =
+  def seekSequence(sequence: String): List[Int] =
     this.indexer getSequenceLocation sequence
 
 }

@@ -8,6 +8,6 @@ trait Indexer {
     * @param sequence sequence to find
     * @return iterator of indexes of the sequence in the genome
     */
-  def getSequenceLocation(sequence: String): Iterator[Int]
+  def getSequenceLocation(sequence: String): List[Int]
 
 }

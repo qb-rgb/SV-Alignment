@@ -11,8 +11,8 @@ trait Seeker {
   /** Seek a sequence in a indexed genome.
     *
     * @param sequence sequence to seek
-    * @return iterator of indexes of the sequence in the genome
+    * @return list of indexes of the sequence in the genome
     */
-  def seekSequence(sequence: String): Iterator[Int]
+  def seekSequence(sequence: String): List[Int]
 
 }

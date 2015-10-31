@@ -51,7 +51,7 @@ class SuffixTableIndexer(val genome: String) extends Indexer {
     }
 
   /** @see indexation.Indexer.getSequenceLocation() */
-  def getSequenceLocation(sequence: String): Iterator[Int] = {
+  def getSequenceLocation(sequence: String): List[Int] = {
     // Search read position around a value
     def getBorder(i: Int, cond: Int => Boolean, f: Int => Int, st: SuffixTable): Int =
       if (cond(i))
@@ -88,10 +88,10 @@ class SuffixTableIndexer(val genome: String) extends Indexer {
     if (optSlice.isDefined) {
       val (minbound, maxbound) = optSlice.get
 
-      (minbound to maxbound).toIterator map { this.suffixTable(_) }
+      (minbound to maxbound).toList map { this.suffixTable(_) }
     }
     else
-      Iterator()
+      Nil
 
   }
 
