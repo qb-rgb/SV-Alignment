@@ -15,9 +15,9 @@ object FASTAReader {
     */
   def readFrom(fileName: String): String = {
     val source = Source fromFile fileName
-    val lines = try source.mkString finally source.close
+    val lines = try source.getLines.toList finally source.close
 
-    lines
+    (lines.tail filterNot { _ == "\n" }).mkString
   }
 
 }
