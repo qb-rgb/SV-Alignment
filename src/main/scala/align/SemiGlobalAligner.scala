@@ -53,6 +53,8 @@ class SemiGlobalAligner(
     def backtrace(i: Int, j: Int, s1: String, s2: String): (String, String, Int) = {
       if (i == 0)
         (s1, s2, j)
+      else if (j == 0)
+        backtrace(i - 1, j, "-" + s1, this.sequence2(i - 1) + s2)
       else {
         val (upI, upJ) = (i - 1, j)
         val (leftI, leftJ) = (i, j - 1)
