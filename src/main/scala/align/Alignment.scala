@@ -8,7 +8,12 @@ package align
   * @param beginIndex2 index of the begining for the second sequence
   * @param sequence2 second sequence of the alignment
   */
-class Alignment(beginIndex1: Int, sequence1: String, beginIndex2: Int, sequence2: String) {
+class Alignment(
+  val beginIndex1: Int,
+  val sequence1: String,
+  val beginIndex2: Int,
+  val sequence2: String
+) {
 
   // For an alignment, the two sequence must have the same length
   require(this.sequence1.length == this.sequence2.length)
