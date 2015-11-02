@@ -8,7 +8,7 @@ package indexation
 class SuffixTableIndexer(val genome: String) extends Indexer {
 
   // Compare two section of the genome without using the substring method
-  def indexCompare(s1: String, s2: String, i: Int, j: Int): Boolean = {
+  private def indexCompare(s1: String, s2: String, i: Int, j: Int): Boolean = {
     def innerIndexCompare(
       s1: String,
       s2: String,
