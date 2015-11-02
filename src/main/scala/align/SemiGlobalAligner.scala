@@ -86,8 +86,16 @@ class SemiGlobalAligner(
       }
     }
 
-    val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
-    val (s1, s2, beginIndex) = backtrace(this.n2, minScoreIndex, "", "")
+    val minInter = math.max(0, this.n2 - this.error)
+    val maxScoreIndex = this.alignmentMatrix(this.n2).
+                        zipWithIndex.
+                        drop(minInter).
+                        max._2
+    val initS1 = (
+      for (i <- this.n1 - 1 to maxScoreIndex by -1) yield this.sequence1(i)
+    ).reverse
+    val initS2 = "-" * (this.n1 - maxScoreIndex)
+    val (s1, s2, beginIndex) = backtrace(this.n2, maxScoreIndex, initS1.mkString ,initS2)
 
     new Alignment(beginIndex + 1, s1, 1, s2)
   }
