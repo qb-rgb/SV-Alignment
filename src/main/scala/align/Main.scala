@@ -19,6 +19,8 @@ object MainAlign {
 
       case "-seedlength" :: value :: tail => nextOption(map ++ Map("-seedlength" -> value), tail)
 
+      case "-seednb" :: value :: tail => nextOption(map ++ Map("-seednb" -> value), tail)
+
       case "-match" :: value :: tail => nextOption(map ++ Map("-match" -> value), tail)
 
       case "-mismatch" :: value :: tail => nextOption(map ++ Map("-mismatch" -> value), tail)
@@ -50,6 +52,11 @@ object MainAlign {
       val mismatch = options("-mismatch").toInt
       val indel = options("-indel").toInt
       val purcent = options("-purcent").toInt
+      val seedExtracter =
+        if (options("-seednb") == "max")
+          MaximalSeedExtracter
+        else
+          MinimalSeedExtracter
 
       val indexer = new SuffixTableIndexer(genome)
       val seeker = new ExactSeeker(indexer)
@@ -57,11 +64,10 @@ object MainAlign {
 
       for {
         read <- reads
-        (seed, pos) <- MaximalSeedExtracter.extractSeedsFrom(read, seedlength)
+        (seed, pos) <- seedExtracter.extractSeedsFrom(read, seedlength)
         alignment <- extender.extend(read, seed, pos)
       } {
         println()
-        println("----------")
         println(alignment)
         println()
       }
