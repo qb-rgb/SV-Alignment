@@ -15,6 +15,8 @@ class Alignment(
   val sequence2: String
 ) {
 
+  import scala.collection.immutable.Queue
+
   // For an alignment, the two sequence must have the same length
   require(this.sequence1.length == this.sequence2.length)
 
@@ -42,17 +44,40 @@ class Alignment(
           " "
     }
 
-    def processSeq(seq: String, start: Int): List[String] =
-      (seq grouped 50).zipWithIndex.toList map {
-        case (line, index) => {
-          val n = start + index * 50
-          f"$n%5d $line"
-        }
+    def processSeq(seq: String, start: Int): List[String] = {
+      def count(s: String, total: Int): (String, Int) = {
+        val nucs = countNucs(s)
+        val oldTotal =
+          if (nucs != 0)
+            total
+          else
+            total - 1
+        val newTotal =
+          if (nucs != 0)
+            total + nucs - 1
+          else
+            total
+        (f"${oldTotal}%7d $s", newTotal)
       }
+
+      def innerProcess(
+        l: List[String],
+        res: Queue[String],
+        total: Int
+      ): List[String] =
+        if (l.isEmpty)
+          res.toList
+        else {
+          val (line, newTotal) = count(l.head, total + 1)
+          innerProcess(l.tail, res :+ line, newTotal)
+        }
+
+      innerProcess((seq grouped 50).toList, Queue[String](), 0)
+    }
 
     val splitSeq1 = processSeq(this.sequence1, this.beginIndex1)
     val splitSeq2 = processSeq(this.sequence2, this.beginIndex2)
-    val splitLinks = (links.mkString grouped 50).toList map { "      " + _ }
+    val splitLinks = (links.mkString grouped 50).toList map { "        " + _ }
 
     val lines = (splitSeq1 zip splitLinks zip splitSeq2) map {
       case ((lines1, lines2), lines3) => (lines1, lines2, lines3)
