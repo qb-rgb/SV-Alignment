@@ -3,6 +3,7 @@ package align
 /** Class to represent semi global aligners.
   *
   * @constructor create a new aligner.
+  * @param sequence1BeginIndex begining index of the sequence1
   * @param sequence1 first sequence to align
   * @param sequence2 second sequence to align
   * @param matchScore score of a match
@@ -12,6 +13,7 @@ package align
   * @author Quentin Baert
   */
 class SemiGlobalAligner(
+  val sequence1BeginIndex: Int,
   override val sequence1: String,
   override val sequence2: String,
   override val matchScore: Int,
@@ -52,7 +54,7 @@ class SemiGlobalAligner(
   val alignment: Alignment = {
     def backtrace(i: Int, j: Int, s1: String, s2: String): (String, String, Int) = {
       if (i == 0)
-        (s1, s2, j)
+        (s1, s2, this.sequence1BeginIndex + j)
       else if (j == 0)
         backtrace(i - 1, j, "-" + s1, this.sequence2(i - 1) + s2)
       else {
