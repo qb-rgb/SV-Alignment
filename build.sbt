@@ -6,4 +6,4 @@ scalacOptions += "-deprecation"
 
 assemblyJarName in assembly := "aligner.jar"
 
-mainClass in assembly := Some("align.Main")
+mainClass in assembly := Some("align.MainAlign")
