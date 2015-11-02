@@ -35,16 +35,13 @@ class Extender(
   }
 
   // Link two alignments
-  private def linkAlignments(left: Alignment, right: Alignment, seed: String): Alignment = {
-    val a = new Alignment(
+  private def linkAlignments(left: Alignment, right: Alignment, seed: String): Alignment =
+    new Alignment(
       left.beginIndex1,
       left.sequence1 + seed + right.sequence1,
       left.beginIndex2,
       left.sequence2 + seed + right.sequence2
     )
-    println("final alignment: \n" + a)
-    a
-  }
 
   // Create an alignment between a read and the genome using a seed
   private def extendForPosition(
@@ -57,19 +54,12 @@ class Extender(
     val rightRead = read.substring(seedPos + seed.length)
     val leftRead = read.substring(0, seedPos)
 
-    println("------" + posInGen + "------")
-    println("left read: " + leftRead)
-    println("right read: " + rightRead)
-
     // Genome parts
     val leftGenIndex = math.max(posInGen - 2 * leftRead.length, 0)
     val leftGen = genome.substring(leftGenIndex, posInGen)
     val rightGenBeginIndex = posInGen + seed.length
     val rightGenIndex = math.min(rightGenBeginIndex + 2 * rightRead.length, genome.length)
     val rightGen = genome.substring(rightGenBeginIndex, rightGenIndex)
-
-    println("left genome: " + leftGen)
-    println("right genome: " + rightGen)
 
     // If the alignment is not doable for one or other parts
     if (leftRead.length > leftGen.length || rightRead.length > rightGen.length)
@@ -99,11 +89,6 @@ class Extender(
       }
       val corrRightAlignment = this.correctAlignment(rightAlignment)
 
-      println("leftAlignment: \n" + leftAlignment)
-      println("rightAlignment: \n" + rightAlignment)
-      println("corrLeftAlignment: \n" + corrLeftAlignment)
-      println("corrRightAlignment: \n" + corrRightAlignment)
-
       val finalAlignment = this.linkAlignments(corrLeftAlignment, corrRightAlignment, seed)
       if (this checkAlignment finalAlignment)
         Some(finalAlignment)
@@ -120,13 +105,10 @@ class Extender(
     */
   def extend(read: String, seed: String, seedPos: List[Int]): List[Alignment] = {
     val seedPositionsInGenome = this.seeker seekSequence seed
-    println("seed positions: " + seedPositionsInGenome)
     val alignments = for {
       pos <- seedPos
       inGen <- seedPositionsInGenome
     } yield this.extendForPosition(read, seed, pos, inGen)
-
-    println("Final alignments: " + alignments)
 
     (alignments filter { _.isDefined }) map { _.get }
   }
