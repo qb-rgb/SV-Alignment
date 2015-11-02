@@ -48,12 +48,16 @@ class Alignment(
       def count(s: String, total: Int): (String, Int) = {
         val nucs = countNucs(s)
         val oldTotal =
-          if (nucs != 0)
+          if (total == 0)
+            1
+          else if (nucs != 0)
             total
           else
             total - 1
         val newTotal =
-          if (nucs != 0)
+          if (total == 0)
+            1
+          else if (nucs != 0)
             total + nucs - 1
           else
             total
@@ -72,7 +76,7 @@ class Alignment(
           innerProcess(l.tail, res :+ line, newTotal)
         }
 
-      innerProcess((seq grouped 50).toList, Queue[String](), 0)
+      innerProcess((seq grouped 50).toList, Queue[String](), start)
     }
 
     val splitSeq1 = processSeq(this.sequence1, this.beginIndex1)
@@ -86,6 +90,24 @@ class Alignment(
     lines.foldLeft(""){
       case (acc, (seq1, l, seq2)) => acc + seq1 + "\n" + l + "\n" + seq2 + "\n"
     }
+  }
+
+  def canEqual(a: Any): Boolean = a.isInstanceOf[Alignment]
+
+  override def equals(that: Any): Boolean = that match {
+    case that: Alignment => {
+      that.canEqual(this) &&
+      this.beginIndex1 == that.beginIndex1 && this.beginIndex2 == that.beginIndex2 &&
+      this.sequence1 == that.sequence1 && this.sequence2 == that.sequence2
+    }
+    case _               => false
+  }
+
+  override def hashCode: Int = {
+    val prime = 31
+
+    this.sequence1.hashCode + prime * this.sequence2.hashCode +
+    this.beginIndex1.hashCode + prime * this.beginIndex2.hashCode
   }
 
 }

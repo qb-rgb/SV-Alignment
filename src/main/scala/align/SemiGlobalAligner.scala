@@ -28,11 +28,11 @@ class SemiGlobalAligner(
     val minusInfinity = -100000
 
     // First row
-    for (j <- 0 to this.error)
+    for (j <- 0 to math.min(this.error, this.n1))
       scores(0)(j) = 0
 
     // First column
-    for (i <- 1 to this.error)
+    for (i <- 1 to math.min(this.error, this.n2))
       scores(i)(0) = i * indelScore
 
     // Diagonals
@@ -86,18 +86,32 @@ class SemiGlobalAligner(
       }
     }
 
+    def findMax(line: List[(Int, Int)], max: Int, res: Int): Int =
+      if (line.isEmpty)
+        res
+      else {
+        val (value, index) = line.head
+
+        if (value > max)
+          findMax(line.tail, value, index)
+        else
+          findMax(line.tail, max, res)
+      }
+
     val minInter = math.max(0, this.n2 - this.error)
-    val maxScoreIndex = this.alignmentMatrix(this.n2).
+    val valueAndIndex = this.alignmentMatrix(this.n2).
                         zipWithIndex.
-                        drop(minInter).
-                        max._2
+                        drop(minInter).toList
+    val maxScoreIndex = findMax(
+      valueAndIndex.tail, valueAndIndex.head._1, valueAndIndex.head._2
+    )
     val initS1 = (
       for (i <- this.n1 - 1 to maxScoreIndex by -1) yield this.sequence1(i)
     ).reverse
     val initS2 = "-" * (this.n1 - maxScoreIndex)
     val (s1, s2, beginIndex) = backtrace(this.n2, maxScoreIndex, initS1.mkString ,initS2)
 
-    new Alignment(beginIndex + 1, s1, 1, s2)
+    new Alignment(beginIndex + 1, s1, 0, s2)
   }
 
 }
