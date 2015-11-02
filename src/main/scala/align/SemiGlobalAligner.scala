@@ -53,8 +53,10 @@ class SemiGlobalAligner(
   /** @see align.Aligner.align() */
   val alignment: Alignment = {
     def backtrace(i: Int, j: Int, s1: String, s2: String): (String, String, Int) = {
-      if (i == 0)
+      if (i == 0 && j == 0)
         (s1, s2, this.sequence1BeginIndex + j)
+      else if (i == 0)
+        backtrace(i, j - 1, this.sequence1(j - 1) + s1, "-" + s2)
       else if (j == 0)
         backtrace(i - 1, j, "-" + s1, this.sequence2(i - 1) + s2)
       else {
