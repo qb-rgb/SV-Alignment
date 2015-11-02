@@ -36,7 +36,7 @@ class SemiGlobalAligner(
       scores(i)(0) = i * indelScore
 
     // Diagonals
-    val diag1Couples = (this.error + 1 to this.n2) zip (0 to this.error)
+    val diag1Couples = (this.error + 1 to this.n2) zip (0 to this.n1)
     val diag2Couples = (0 to this.n2) zip (this.error + 1 to this.n1)
 
     for ((i, j) <- diag1Couples) scores(i)(j) = minusInfinity
