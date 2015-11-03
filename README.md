@@ -1,17 +1,17 @@
 Quentin Baert  
-Master MOCAD
+M2 MOCAD  
 
 # Réalisation d'un read mapper
 
-## Objectif
+## Objectifs
 
-L'objectif de ce TP était de réaliser un read mapper, c'est à dire une application qui aligne des reads avec un bout de génome.
+L'objectif de ce TP était de réaliser un read mapper, c'est à dire un logiciel qui aligne des reads sur un génome.
 
 ## Récupération
 
-Le TP se trouve à l'adresse suivante :
+Les sources du TP sont disponibles à l'adresse suivante :
 ```
-https://github.com/qw0te/SV-Alignment
+https://github.com/qw0te/SV-Alignment.git
 ```
 
 ## Architecture
@@ -26,6 +26,11 @@ src
         │   ├── SemiGlobalAligner.scala
         │   └── align.scala
         ├── extension
+        │   ├── Main.scala
+        │   ├── SemiGlobalAligner.scala
+        │   └── align.scala
+        ├── extension
+        │   ├── Extender.scala
         │   ├── MaximalSeedExtracter.scala
         │   ├── MinimalSeedExtracter.scala
         │   ├── SeedExtracter.scala
@@ -44,72 +49,81 @@ src
             └── search.scala
 ```
 
+Avec :
+* `align` qui contient les sources pour l'alignement de deux séquences,
+* `indexation` qui contient les sources pour la phase d'indexation d'un read mapper,
+* `search` qui contient les sources pour la phase de recherche d'un read mapper,
+* `extension` qui contient le sources pour la phase d'extension d'un read mapper,
+* `fasta` qui contient les sources pour lire les fichiers FASTA et FASTQ.
+
 ## Compilation
 
-Le TP a été réalisé à l'aide de l'outil *Scala Build Tool* (disponible ici http://www.scala-sbt.org/download.html).  
-Pour compiler et obtenir le `jar` à la racine du projet exécuter :
+Le projet est réalisé en Scala à l'aide de l'outil *Scala Build Tool* (ou SBT disponible ici http://www.scala-sbt.org/download.html).  
+Pour compiler et avoir le `jar` à la racine du projet, exécuter les commande suivante depuis la racine :
 ```
 sbt assembly
-mv target/scala-2.10/aligner.jar
+mv target/scala-2.10/aligner.jar .
 ```
 
-## Exécution
+Un `jar` exécutable est également fourni dans l'archive du TP.
 
-Pour exécuter le `jar` exécuter la commande suivante :
+## Utilisation
+
+Pour utiliser le `jar`, utilser la commande suivante :
 ```
 java -jar aligner.jar -genome [pathG] -reads [pathR] -seedlength [s] -seednb [max|min] -match [m] -mismatch [mm] -indel [i] -purcent [p]
 ```
 
 Avec :
-* `[pathG]` chemin vers le fichier FASTA contenant le génome
-* `[pathR]` chemin vers le fichier FASTQ contenant les reads
-* `[s]` taille des seeds à extraire des reads
-* `[max|min]` `max` pour extraire le maximum de seed d'un read, `min` pour en extraire le minimum
-* `[m]` score des matchs lors de l'alignement
-* `[mm]` score des mismatchs lors de l'alignement
-* `[i]` score des indel lors de l'alignement
-* `[p]` pourcentage d'erreur toléré lors de l'alignement d'un read sur le génome
+* `[pathG]` chemin vers le fichier FASTA qui contient le génome,
+* `[pathR]` chemin vers le fichier FASTQ qui contient les reads,
+* `[s]` taille des seeds extraites des reads,
+* `[max|min]` `max` pour avoir le nombre maximal de seeds par read, `min` pour en avoir le nombre minimal,
+* `[m]` score des matchs lors de l'alignement,
+* `[mm]` score des mismatchs lors de l'alignement,
+* `[i]` score des indels lors de l'alignement
+* `[p]` pourcentage d'erreur toléré sur l'alignement d'un read avec le génome
 
-L'ordre des paramètres n'importe pas.
+L'ordre des paramètre n'importe pas.
 
 Exemple d'utilisation :
 ```
 java -jar aligner.jar -genome NC_002549.fna -reads SRR1930021.fastq -seedlength 25 -match 5 -mismatch -4 -indel -10 -purcent 10 -seednb min
 ```
 
-## Réalisation
+## Réalisations
 
-* Il est possible d'améliorer la programmation dynamique d'un alignement grâce à un *k-band*
+* L'alignement de deux séquences peut être optimisé grâce à une programmation dynamique de type *k-band*.
 
-* Les alignement sont présenté de manière claire :
-  * Le génome au dessus, le read en dessous
-  * Les séquence sont divisés en lignes de 50 nucléotides
-  * Chaque séquence est indicé pour pouvoir la retrouver par la suite dans la séquence d'origine
-  * Les matchs, mismatchs, indels sont clairement indiqués
+* Il est possible de demander la matrice d'alignement à un `Aligner`.
 
-* Une seule technique d'indexation a été implémentée : la table des suffixes
+* Une seule méthode d'indéxation a été implémentée : la table des suffixes.
 
-* Deux méthodes d'extraction de seeds ont été implémentées
-  * La première permet d'extraire le nombre minimal de seeds d'un read tout en le couvrant totallement
-  * La seconde permet d'extraire le nombre maximam de seeds d'un read
+* Deux méthodes d'extraction de seed à partir d'un read ont été implémentées :
+  * la première permet d'extraire le minimum de seeds d'un read tout en le couvrant totalement,
+  * la seconde permet d'extraire le maximum de seeds d'un read (soit un écart d'un seul nucléotide entre deux seeds successives dans le read).
 
-* Une seule technique de recherche de seed dans le génome a été implémenté : la recherche exacte
 
-* Lors d'un alignement, si un read match suffisamment avec le génome, l'alignement est imprimé sur la sortie standard
+* Une seule méthode de recherche des graines a été implémentée : la recherche exacte.
 
-* Les génomes sont extraits de fichier FASTA, les reads de fichiers FASTQ
+* Les alignements sont affichés de manière claire est lisible :
+  * le génome se trouve toujours en haut (et donc le read en dessous),
+  * les deux séquences sont affichés par ligne de 50 caractères,
+  * les deux séquences sont indéxées afin que l'on puisse les retrouver dans le génome et/ou le read concerné,
+  * les matchs, mismatchs et indel sont clairement indiqués.
 
-* Un dossier `test` contient un court genome ainsi que quelques reads. Ces reads correspondent à des situations bien différentes :
-  * Les reads issus directement du génome sont parfaitement alignés
-  * Les reads qui s'alignent aux position limites du génome s'alignent correctement également
-  * Les reads aléatoire ne correspondent pas assez avec le génome, leur alignement ne sont pas renvoyés
-  * Les reads provenant du génome mais légèrement modifiés sont également aligné avec quelques erreurs
+
+* Lors de l'alignement, les reads qui sont suffisamment bien aligner avec le read sont imprimés.
+
+* Un dossier test est fourni avec à l'intérieur un petit génome de test ainsi que quelques reads. Ce petit jeu de tests montre bien que les reads sans ressemblance avec le génome ne trouvent pas d'alignement, que ceux directement extraits du génome trouve un alignement parfait (les tests incluent des reads aux positions limites du génome), et que les reads quelques peu modifiés trouvent tout de même un alignement avec des nucléotides qui ne matchent pas.
 
 ## Résultats
 
-### Sur l'alignement de test
+### Résultats sur l'alignement de test
 
-Un alignement test a été fourni au début du TP. Ce dernier est correctement aligné.
+Un alignement de test à été fourni en début de TP.
+
+L'alignement obtenu est le même à une position d'indel prêt, mais que ne change rien aux caratctéristiques de l'alignement (nombre de matchs, nombres de gaps, score).
 
 ```
 scala> import align._
@@ -126,7 +140,7 @@ aligner: align.SemiGlobalAligner = align.SemiGlobalAligner@71bab54a
 
 scala> aligner.alignment
 res0: align.Alignment =
-      2 tgggatggatcaaccctaacagtggtggcacaaacta-tgcacagaagtt
+      1 tgggatggatcaaccctaacagtggtggcacaaacta-tgcacagaagtt
         | | | | ||  |   |   | || ||  | | ||||  |||||     |
       1 ttgcacgcattga--ttggga-tgatgataaatactacagcaca-tctct
      51 tcagggcagggtcaccatgaccagggacacgtccatcagcaca-g-ccta
@@ -147,16 +161,21 @@ scala> aligner.alignment.countGaps
 res2: Int = 20
 ```
 
-### Sur Ebola
+### Résultats sur Ebola
 
-Deux tests différents ont été fait sur le génome et les reads d'Ebola.
+Les tests sur le génome d'Ebola donnent les résulats suivants :
 
-* Avec un nombre minimal de seeds extraites par read, le temps d'exécution est de  secondes.
+* Avec le minimum de seeds par read, les 3389 reads sont traités en 30 secondes et 76% sont correctement alignés.
+```
+76% of aligned reads
+28.40 real        31.43 user         1.14 sys
+```
 
-* Avec un nombre maximal de seeds extraites par read, le temps d'exécution est de 9,5 minutes.
+* Avec le maximum de seeds par read, les 3389 reads sont traités en 576 secondes (soit environ 9,5 minutes).
+```
+569.54 real       576.20 user        19.98 sys
+```
 
-Environ 76% des reads sont correctements alignés.
+### Résultats sur le génome humain
 
-### Sur le génome humain
-
-Aucun tests n'a été réalisé sur le génome humain.
+Aucun test sur le génome humain n'a été réalisé.

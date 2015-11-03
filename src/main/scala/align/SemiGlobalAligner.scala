@@ -28,15 +28,15 @@ class SemiGlobalAligner(
     val minusInfinity = -100000
 
     // First row
-    for (j <- 0 to this.error)
+    for (j <- 0 to math.min(this.error, this.n1))
       scores(0)(j) = 0
 
     // First column
-    for (i <- 1 to this.error)
+    for (i <- 1 to math.min(this.error, this.n2))
       scores(i)(0) = i * indelScore
 
     // Diagonals
-    val diag1Couples = (this.error + 1 to this.n2) zip (0 to this.error)
+    val diag1Couples = (this.error + 1 to this.n2) zip (0 to this.n1)
     val diag2Couples = (0 to this.n2) zip (this.error + 1 to this.n1)
 
     for ((i, j) <- diag1Couples) scores(i)(j) = minusInfinity
@@ -53,8 +53,10 @@ class SemiGlobalAligner(
   /** @see align.Aligner.align() */
   val alignment: Alignment = {
     def backtrace(i: Int, j: Int, s1: String, s2: String): (String, String, Int) = {
-      if (i == 0)
+      if (i == 0 && j == 0)
         (s1, s2, this.sequence1BeginIndex + j)
+      else if (i == 0)
+        backtrace(i, j - 1, this.sequence1(j - 1) + s1, "-" + s2)
       else if (j == 0)
         backtrace(i - 1, j, "-" + s1, this.sequence2(i - 1) + s2)
       else {
@@ -84,10 +86,36 @@ class SemiGlobalAligner(
       }
     }
 
-    val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
-    val (s1, s2, beginIndex) = backtrace(this.n2, minScoreIndex, "", "")
+    def findMax(line: List[(Int, Int)], max: Int, res: Int): Int =
+      if (line.isEmpty)
+        res
+      else {
+        val (value, index) = line.head
 
+        if (value > max)
+          findMax(line.tail, value, index)
+        else
+          findMax(line.tail, max, res)
+      }
+
+    val minInter = math.max(0, this.n2 - this.error)
+    val valueAndIndex = this.alignmentMatrix(this.n2).
+                        zipWithIndex.
+                        drop(minInter).toList
+    val maxScoreIndex = findMax(
+      valueAndIndex.tail, valueAndIndex.head._1, valueAndIndex.head._2
+    )
+    val initS1 = (
+      for (i <- this.n1 - 1 to maxScoreIndex by -1) yield this.sequence1(i)
+    ).reverse
+    val initS2 = "-" * (this.n1 - maxScoreIndex)
+    val (s1, s2, beginIndex) = backtrace(this.n2, maxScoreIndex, initS1.mkString ,initS2)
+
+<<<<<<< HEAD
     new Alignment(beginIndex, s1, 1, s2)
+=======
+    new Alignment(beginIndex, s1, 0, s2)
+>>>>>>> refactor
   }
 
 }
