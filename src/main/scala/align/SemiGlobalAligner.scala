@@ -87,7 +87,7 @@ class SemiGlobalAligner(
     val minScoreIndex = this.alignmentMatrix(this.n2).zipWithIndex.max._2
     val (s1, s2, beginIndex) = backtrace(this.n2, minScoreIndex, "", "")
 
-    new Alignment(beginIndex + 1, s1, 1, s2)
+    new Alignment(beginIndex, s1, 1, s2)
   }
 
 }
