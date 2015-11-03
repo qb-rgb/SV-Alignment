@@ -23,6 +23,7 @@ src
         ├── align
         │   ├── Aligner.scala
         │   ├── Alignment.scala
+        │   ├── Main.scala
         │   ├── SemiGlobalAligner.scala
         │   └── align.scala
         ├── extension
