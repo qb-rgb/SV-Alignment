@@ -27,10 +27,6 @@ src
         │   ├── SemiGlobalAligner.scala
         │   └── align.scala
         ├── extension
-        │   ├── Main.scala
-        │   ├── SemiGlobalAligner.scala
-        │   └── align.scala
-        ├── extension
         │   ├── Extender.scala
         │   ├── MaximalSeedExtracter.scala
         │   ├── MinimalSeedExtracter.scala
