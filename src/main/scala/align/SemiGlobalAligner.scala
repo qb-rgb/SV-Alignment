@@ -111,11 +111,7 @@ class SemiGlobalAligner(
     val initS2 = "-" * (this.n1 - maxScoreIndex)
     val (s1, s2, beginIndex) = backtrace(this.n2, maxScoreIndex, initS1.mkString ,initS2)
 
-<<<<<<< HEAD
-    new Alignment(beginIndex, s1, 1, s2)
-=======
     new Alignment(beginIndex, s1, 0, s2)
->>>>>>> refactor
   }
 
 }
