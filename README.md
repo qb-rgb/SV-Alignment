@@ -78,3 +78,85 @@ java -jar aligner.jar -genome NC_002549.fna -reads SRR1930021.fastq -seedlength 
 ```
 
 ## Réalisation
+
+* Il est possible d'améliorer la programmation dynamique d'un alignement grâce à un *k-band*
+
+* Les alignement sont présenté de manière claire :
+  * Le génome au dessus, le read en dessous
+  * Les séquence sont divisés en lignes de 50 nucléotides
+  * Chaque séquence est indicé pour pouvoir la retrouver par la suite dans la séquence d'origine
+  * Les matchs, mismatchs, indels sont clairement indiqués
+
+* Une seule technique d'indexation a été implémentée : la table des suffixes
+
+* Deux méthodes d'extraction de seeds ont été implémentées
+  * La première permet d'extraire le nombre minimal de seeds d'un read tout en le couvrant totallement
+  * La seconde permet d'extraire le nombre maximam de seeds d'un read
+
+* Une seule technique de recherche de seed dans le génome a été implémenté : la recherche exacte
+
+* Lors d'un alignement, si un read match suffisamment avec le génome, l'alignement est imprimé sur la sortie standard
+
+* Les génomes sont extraits de fichier FASTA, les reads de fichiers FASTQ
+
+* Un dossier `test` contient un court genome ainsi que quelques reads. Ces reads correspondent à des situations bien différentes :
+  * Les reads issus directement du génome sont parfaitement alignés
+  * Les reads qui s'alignent aux position limites du génome s'alignent correctement également
+  * Les reads aléatoire ne correspondent pas assez avec le génome, leur alignement ne sont pas renvoyés
+  * Les reads provenant du génome mais légèrement modifiés sont également aligné avec quelques erreurs
+
+## Résultats
+
+### Sur l'alignement de test
+
+Un alignement test a été fourni au début du TP. Ce dernier est correctement aligné.
+
+```
+scala> import align._
+import align._
+
+scala> val s1 = "tgggatggatcaaccctaacagtggtggcacaaactatgcacagaagtttcagggcagggtcaccatgaccagggacacgtccatcagcacagcctacatggagctgagcaggctgagatctgacgacacggccgtgtattactgtgcgagaga"
+s1: String = tgggatggatcaaccctaacagtggtggcacaaactatgcacagaagtttcagggcagggtcaccatgaccagggacacgtccatcagcacagcctacatggagctgagcaggctgagatctgacgacacggccgtgtattactgtgcgagaga
+
+scala> val s2 = "ttgcacgcattgattgggatgatgataaatactacagcacatctctgaagaccaggctcaccatctccaaggacacctccaaaaaccaggtggtccttacaatgaccaacatggaccctgtggacacggccgtgtattactg"
+s2: String = ttgcacgcattgattgggatgatgataaatactacagcacatctctgaagaccaggctcaccatctccaaggacacctccaaaaaccaggtggtccttacaatgaccaacatggaccctgtggacacggccgtgtattactg
+
+scala> val aligner = new SemiGlobalAligner(0, s1, s2, 5, -4, -10, 9)
+aligner: align.SemiGlobalAligner = align.SemiGlobalAligner@71bab54a
+
+scala> aligner.alignment
+res0: align.Alignment =
+      2 tgggatggatcaaccctaacagtggtggcacaaacta-tgcacagaagtt
+        | | | | ||  |   |   | || ||  | | ||||  |||||     |
+      1 ttgcacgcattga--ttggga-tgatgataaatactacagcaca-tctct
+     51 tcagggcagggtcaccatgaccagggacacgtccatcagcaca-g-ccta
+          ||  |||| |||||||  ||| |||||| ||||  | | || |   |
+     47 gaagaccaggctcaccatctccaaggacacctccaaaaac-caggtggtc
+     99 catggagctgagcaggctgaga-tctgacgacacggccgtgtattactgt
+        | |  |  ||| ||   || ||  |||  ||||||||||||||||||||
+     96 cttaca-atgaccaacatg-gaccctgtggacacggccgtgtattactg-
+    148 gcgagaga
+
+    142 --------
+
+
+scala> aligner.alignment.countMatches
+res1: Int = 92
+
+scala> aligner.alignment.countGaps
+res2: Int = 20
+```
+
+### Sur Ebola
+
+Deux tests différents ont été fait sur le génome et les reads d'Ebola.
+
+* Avec un nombre minimal de seeds extraites par read, le temps d'exécution est de  secondes.
+
+* Avec un nombre maximal de seeds extraites par read, le temps d'exécution est de 9,5 minutes.
+
+Environ 76% des reads sont correctements alignés.
+
+### Sur le génome humain
+
+Aucun tests n'a été réalisé sur le génome humain.
